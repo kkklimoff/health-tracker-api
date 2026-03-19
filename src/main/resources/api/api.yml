@@ -1,0 +1,127 @@
+openapi: 3.1.0
+info:
+  title: Health tracker API
+  description: Health tracker API
+  version: 1.0.0
+servers:
+  - url: /api
+    description: local
+paths:
+  /auth/register:
+    post:
+      tags:
+        - auth
+      operationId: register
+      description: User registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationRequest'
+      responses:
+        200:
+          description: Successfully registered
+  /auth/login:
+    post:
+      tags:
+        - auth
+      operationId: login
+      description: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        200:
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponse'
+  /test/{id}:
+    get:
+      tags:
+        - test
+      summary: Test
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Test ID
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    LoginRequest:
+      description: Login credentials
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username
+          minLength: 4
+          maxLength: 50
+        password:
+          type: string
+          description: Password
+          minLength: 8
+          maxLength: 255
+      required:
+        - username
+        - password
+    RegistrationRequest:
+      description: Registration request
+      allOf:
+        - $ref: '#/components/schemas/LoginRequest'
+        - type: object
+          properties:
+            email:
+              type: string
+              description: Email address
+              minLength: 1
+              maxLength: 255
+              format: email
+            firstName:
+              type: string
+              description: First name
+              minLength: 1
+              maxLength: 100
+            lastName:
+              type: string
+              description: Last name
+              minLength: 1
+              maxLength: 100
+          required:
+            - username
+            - email
+            - password
+            - firstName
+    JwtResponse:
+      type: object
+      properties:
+        token:
+          type: string
+    TestResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Test response message
+security:
+  - bearerAuth: [ ]
+  
