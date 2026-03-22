@@ -1,4 +1,4 @@
-package com.kkkneecapping.healthtrackerapi.api.controller;
+package com.kkkneecapping.healthtrackerapi.controller;
 
 import com.kkkneecapping.healthtrackerapi.api.TestApi;
 import com.kkkneecapping.healthtrackerapi.dto.TestResponse;

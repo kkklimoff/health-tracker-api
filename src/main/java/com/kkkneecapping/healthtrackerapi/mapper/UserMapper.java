@@ -1,4 +1,4 @@
-package com.kkkneecapping.healthtrackerapi.api.mapper;
+package com.kkkneecapping.healthtrackerapi.mapper;
 
 import com.kkkneecapping.healthtrackerapi.dto.RegistrationRequest;
 import com.kkkneecapping.healthtrackerapi.entity.User;

@@ -1,4 +1,6 @@
-package com.kkkneecapping.healthtrackerapi.api.controller;
+package com.kkkneecapping.healthtrackerapi.controller;
+
+import static com.kkkneecapping.healthtrackerapi.util.ApiUtil.responseOk;
 
 import com.kkkneecapping.healthtrackerapi.api.AuthApi;
 import com.kkkneecapping.healthtrackerapi.dto.JwtResponse;
@@ -18,12 +20,12 @@ public class AuthController implements AuthApi {
   @Override
   public ResponseEntity<JwtResponse> login(LoginRequest loginRequest) {
     String token = authService.login(loginRequest);
-    return ResponseEntity.ok(new JwtResponse().token(token));
+    return responseOk(new JwtResponse(token));
   }
 
   @Override
   public ResponseEntity<Void> register(RegistrationRequest registrationRequest) {
     authService.register(registrationRequest);
-    return ResponseEntity.ok().build();
+    return responseOk();
   }
 }

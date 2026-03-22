@@ -12,6 +12,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
   public void configurePathMatch(PathMatchConfigurer configurer) {
     configurer.addPathPrefix(
         "/api",
-        HandlerTypePredicate.forBasePackage("com.kkkneecapping.healthtrackerapi.api.controller"));
+        HandlerTypePredicate.forBasePackage("com.kkkneecapping.healthtrackerapi.controller"));
   }
 }

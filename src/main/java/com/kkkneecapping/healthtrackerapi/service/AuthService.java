@@ -1,9 +1,9 @@
 package com.kkkneecapping.healthtrackerapi.service;
 
-import com.kkkneecapping.healthtrackerapi.api.mapper.UserMapper;
 import com.kkkneecapping.healthtrackerapi.dto.LoginRequest;
 import com.kkkneecapping.healthtrackerapi.dto.RegistrationRequest;
 import com.kkkneecapping.healthtrackerapi.entity.User;
+import com.kkkneecapping.healthtrackerapi.mapper.UserMapper;
 import com.kkkneecapping.healthtrackerapi.security.JwtUtil;
 import com.kkkneecapping.healthtrackerapi.security.SecurityUser;
 import java.util.Objects;
@@ -13,7 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +23,6 @@ public class AuthService {
   private final UserMapper userMapper;
   private final PasswordEncoder passwordEncoder;
 
-  @Transactional
   public String login(LoginRequest loginRequest) {
     Authentication authentication =
         authenticationManager.authenticate(
@@ -39,7 +37,6 @@ public class AuthService {
     return jwtUtil.generateToken(securityUser.getPublicId());
   }
 
-  @Transactional
   public void register(RegistrationRequest registrationRequest) {
     User user = userMapper.fromDto(registrationRequest);
     user.setPasswordHash(passwordEncoder.encode(registrationRequest.getPassword()));

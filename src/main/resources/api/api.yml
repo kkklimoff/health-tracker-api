@@ -22,6 +22,8 @@ paths:
       responses:
         200:
           description: Successfully registered
+        400:
+          $ref: '#/components/responses/BadRequestWithErrors'
   /auth/login:
     post:
       tags:
@@ -66,7 +68,57 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  responses:
+    BadRequestWithErrors:
+      description: Contains error description
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiErrorResponse'
   schemas:
+    ApiErrorResponse:
+      type: object
+      description: Contains error description
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error message
+        details:
+          type: array
+          description: Array of error details
+          items:
+            $ref: '#/components/schemas/ApiSubError'
+      required:
+        - timestamp
+        - code
+        - message
+    ApiSubError:
+      type: object
+      description: Error details
+      properties:
+        code:
+          type: string
+          description: Sub error code
+        message:
+          type: string
+          description: Message
+        field:
+          type: string
+          description: Field producing error
+        params:
+          type: object
+          description: Error code params
+          additionalProperties: true
+      required:
+        - code
+        - message
     LoginRequest:
       description: Login credentials
       type: object
@@ -116,6 +168,8 @@ components:
       properties:
         token:
           type: string
+      required:
+        - token
     TestResponse:
       type: object
       properties:

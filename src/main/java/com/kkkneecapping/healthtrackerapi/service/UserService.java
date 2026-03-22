@@ -1,6 +1,8 @@
 package com.kkkneecapping.healthtrackerapi.service;
 
 import com.kkkneecapping.healthtrackerapi.entity.User;
+import com.kkkneecapping.healthtrackerapi.exception.EmailDuplicationException;
+import com.kkkneecapping.healthtrackerapi.exception.UsernameDuplicationException;
 import com.kkkneecapping.healthtrackerapi.repository.UserRepository;
 import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +17,11 @@ public class UserService {
 
   @Transactional
   public void create(User user) {
-    if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-      throw new IllegalStateException("User already exists");
+    if (userRepository.existsByEmail(user.getEmail())) {
+      throw new EmailDuplicationException();
+    }
+    if (userRepository.existsByUsername(user.getUsername())) {
+      throw new UsernameDuplicationException();
     }
     // TODO
     user.setStatus(User.UserStatus.ACTIVE);
