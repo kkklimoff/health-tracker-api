@@ -43,25 +43,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/JwtResponse'
-  /test/{id}:
-    get:
+  /measurement:
+    post:
       tags:
-        - test
-      summary: Test
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          description: Test ID
+        - measurement
+      operationId: saveMeasurement
+      description: Saves measurement and its values
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeasurementWithValuesRequest'
       responses:
-        '200':
-          description: OK
+        201:
+          description: Successfully saved
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TestResponse'
+                $ref: '#/components/schemas/MeasurementWithValuesResponse'
+        400:
+          $ref: '#/components/responses/BadRequestWithErrors'
 components:
   securitySchemes:
     bearerAuth:
@@ -76,6 +78,84 @@ components:
           schema:
             $ref: '#/components/schemas/ApiErrorResponse'
   schemas:
+    MeasurementWithValuesRequest:
+      type: object
+      description: Measurement record with its values creation/update request
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Record id
+        type:
+          type: string
+          description: Measurement type
+          minLength: 1
+          maxLength: 30
+        recordedAt:
+          type: string
+          format: date-time
+          description: Time of measurement
+        details:
+          type: object
+          description: Measurement details (JSON)
+          additionalProperties: true
+        values:
+          type: object
+          descriptions: Measurement value map
+          additionalProperties:
+            type: number
+            format: float
+      required:
+        - type
+        - recordedAt
+        - values
+    MeasurementWithValuesResponse:
+      type: object
+      description: Measurement record with its values response
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: recordId
+        type:
+          type: string
+          description: Measurement type
+        recordedAt:
+          type: string
+          format: date-time
+          description: Time of measurement
+        createdAt:
+          type: string
+          format: date-time
+          description: Record created at
+        details:
+          type: object
+          description: Measurement details (JSON)
+          additionalProperties: true
+        values:
+          type: array
+          descriptions: Measurement values
+          items:
+            $ref: '#/components/schemas/MeasurementValueResponse'
+    MeasurementValueResponse:
+      type: object
+      description: Distinct measurement value
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Record ID
+        createdAt:
+          type: string
+          format: date-time
+          description: Record created at
+        value:
+          type: number
+          format: float
+          description: Value of a measurement
+        aspect:
+          type: string
+          description: Aspect measured
     ApiErrorResponse:
       type: object
       description: Contains error description
